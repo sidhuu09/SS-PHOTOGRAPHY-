@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,14 +21,14 @@ nav a:hover{color:var(--gold)}
 .hero h2{font-size:clamp(32px,7vw,58px);margin:18px 0}
 .gold{color:var(--gold)}
 .hero p{line-height:1.8;color:#eee;max-width:520px}
-.btn,button{display:inline-block;background:var(--gold);color:#111;padding:13px 23px;border:0;border-radius:3px;font-weight:bold;text-decoration:none;cursor:pointer}
+.btn,button{display:inline-block;background:var(--gold);color:#111;padding:13px 23px;border:0;border-radius:4px;font-weight:bold;text-decoration:none;cursor:pointer}
+button:disabled{opacity:.6;cursor:wait}
 section{padding:48px 16px;text-align:center}
 .section-title{font-size:28px;color:var(--gold);margin:0 0 10px}
 .sub{color:#bbb;margin-bottom:28px}
 .wrap{max-width:1050px;margin:auto}
 .gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px}
-.gallery img{width:100%;height:210px;object-fit:cover;border-radius:5px;border:1px solid #383026;transition:transform .25s}
-.gallery img:hover{transform:scale(1.025)}
+.gallery img{width:100%;height:210px;object-fit:cover;border-radius:5px;border:1px solid #383026}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;margin-top:28px}
 .card{background:var(--panel);padding:24px 18px;border:1px solid #55452b;border-radius:8px}
 .card h3{color:var(--gold)}
@@ -37,11 +38,15 @@ section{padding:48px 16px;text-align:center}
 form{max-width:520px;margin:auto;text-align:left;background:var(--panel);padding:22px;border:1px solid #55452b;border-radius:8px}
 label{display:block;margin-top:13px;font-size:14px;color:#eee}
 input,select,textarea{width:100%;padding:13px;margin-top:7px;border:1px solid #555;border-radius:4px;background:#0c0c0c;color:white;font-size:15px}
-input:focus,select:focus,textarea:focus{outline:1px solid var(--gold)}
 form button{width:100%;margin-top:20px}
 .note{font-size:12px;color:#aaa;line-height:1.6}
+#bookingResult{display:none;margin-top:20px;padding:18px;border:1px solid var(--gold);border-radius:8px;text-align:center;overflow-wrap:anywhere}
+.wa-link{display:block;padding:13px;margin:12px 0;background:var(--gold);color:#111;text-decoration:none;border-radius:5px;font-weight:bold}
+#bookingMessage{color:#ddd;line-height:1.6}
 footer{padding:28px 15px;text-align:center;background:#080808;border-top:1px solid #453820;color:#bbb;font-size:13px}
 footer strong{color:var(--gold)}
+.admin{text-align:center;padding:20px}
+.admin a{display:inline-block;background:#111;color:var(--gold);padding:12px 24px;border:1px solid var(--gold);border-radius:8px;text-decoration:none;font-weight:bold}
 </style>
 </head>
 <body>
@@ -79,7 +84,6 @@ footer strong{color:var(--gold)}
       <img src="https://images.unsplash.com/photo-1532712938310-34cb3982ef74?auto=format&fit=crop&w=600&q=80" alt="Event photography">
       <img src="https://images.unsplash.com/photo-1465495976277-4387d4b0e4a6?auto=format&fit=crop&w=600&q=80" alt="Wedding celebration">
     </div>
-    <p class="note">Demo gallery photos are shown here. Your own photos can be added later.</p>
   </div>
 </section>
 
@@ -88,26 +92,10 @@ footer strong{color:var(--gold)}
     <h2 class="section-title">Our Services</h2>
     <p class="sub">Choose the service for your special occasion.</p>
     <div class="cards">
-      <div class="card">
-        <h3>Photography</h3>
-        <p>Portraits, family photos, birthdays and special moments.</p>
-        <div class="price">PACKAGE PRICE: CONTACT US</div>
-      </div>
-      <div class="card">
-        <h3>Videography</h3>
-        <p>Event coverage, cinematic videos and memorable highlights.</p>
-        <div class="price">PACKAGE PRICE: CONTACT US</div>
-      </div>
-      <div class="card">
-        <h3>Wedding Package</h3>
-        <p>Wedding photography and videography for your big day.</p>
-        <div class="price">PACKAGE PRICE: CONTACT US</div>
-      </div>
-      <div class="card">
-        <h3>Pre-Wedding</h3>
-        <p>Creative couple portraits and beautiful outdoor shoots.</p>
-        <div class="price">PACKAGE PRICE: CONTACT US</div>
-      </div>
+      <div class="card"><h3>Photography</h3><p>Portraits, family photos, birthdays and special moments.</p><div class="price">PACKAGE PRICE: CONTACT US</div></div>
+      <div class="card"><h3>Videography</h3><p>Event coverage, cinematic videos and memorable highlights.</p><div class="price">PACKAGE PRICE: CONTACT US</div></div>
+      <div class="card"><h3>Wedding Package</h3><p>Wedding photography and videography for your big day.</p><div class="price">PACKAGE PRICE: CONTACT US</div></div>
+      <div class="card"><h3>Pre-Wedding</h3><p>Creative couple portraits and beautiful outdoor shoots.</p><div class="price">PACKAGE PRICE: CONTACT US</div></div>
     </div>
   </div>
 </section>
@@ -116,12 +104,13 @@ footer strong{color:var(--gold)}
   <div class="wrap">
     <h2 class="section-title">Book Your Event</h2>
     <p class="sub">Send us your event details.</p>
+
     <form id="bookingForm">
       <label for="customer">Customer Name *</label>
       <input id="customer" name="customer" required placeholder="Enter your full name">
 
       <label for="mobile">Mobile Number *</label>
-      <input id="mobile" name="mobile" type="tel" pattern="[0-9]{10}" maxlength="10" required placeholder="10-digit mobile number">
+      <input id="mobile" name="mobile" type="tel" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" required placeholder="10-digit mobile number">
 
       <label for="service">Select Service *</label>
       <select id="service" name="service" required>
@@ -141,8 +130,17 @@ footer strong{color:var(--gold)}
       <label for="details">Additional Details</label>
       <textarea id="details" name="details" rows="4" placeholder="Tell us about your event"></textarea>
 
-      <button type="submit">Submit Booking</button>
-      <p class="note">Note: This form is currently a demo. Booking details are not yet saved to a database or sent to the owner.</p>
+      <button id="submitBooking" type="submit">Submit Booking</button>
+      <p class="note">Your booking request will be saved with Pending status. After saving, choose a WhatsApp option below.</p>
+
+      <div id="bookingResult" role="status" aria-live="polite">
+        <h3 style="color:#e8bd68">Booking Successful!</h3>
+        <p>Your booking status: <strong>Pending</strong></p>
+        <p id="bookingMessage">Your booking has been saved.</p>
+        <a id="adminWhatsApp" class="wa-link" href="#" target="_blank" rel="noopener">Notify Admin on WhatsApp</a>
+        <a id="customerWhatsApp" class="wa-link" href="#" target="_blank" rel="noopener">Customer Confirmation on WhatsApp</a>
+        <p class="note">WhatsApp will open with a prepared message. Press Send in WhatsApp to send it.</p>
+      </div>
     </form>
   </div>
 </section>
@@ -154,18 +152,51 @@ footer strong{color:var(--gold)}
   <p>© 2026 SS PHOTOGRAPHY. All rights reserved.</p>
 </footer>
 
-<script>
+<div class="admin">
+  <a href="admin.html">🔐 Admin Login</a>
+</div>
 
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
 
-document.getElementById('bookingForm').addEventListener('submit', async function(e) {
+const firebaseConfig = {
+  apiKey: "AIzaSyAViIeR7357V2aDxNVxx6Y2-LPassccPIc",
+  authDomain: "ss-photography-ab010.firebaseapp.com",
+  projectId: "ss-photography-ab010",
+  storageBucket: "ss-photography-ab010.firebasestorage.app",
+  messagingSenderId: "275799297604",
+  appId: "1:275799297604:web:cbc8521e08594e6b72f611"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// Existing Firebase booking save function
+window.saveBooking = async function(booking) {
+  return await addDoc(collection(db, "bookings"), booking);
+};
+
+document.getElementById("bookingForm").addEventListener("submit", async function(e) {
   e.preventDefault();
 
-  const customer = document.getElementById('customer').value.trim();
-  const mobile = document.getElementById('mobile').value.trim();
-  const service = document.getElementById('service').value;
-  const eventDate = document.getElementById('eventDate').value;
-  const venue = document.getElementById('venue').value.trim();
-  const details = document.getElementById('details').value.trim();
+  const form = this;
+  const button = document.getElementById("submitBooking");
+  const result = document.getElementById("bookingResult");
+
+  if (!form.reportValidity()) return;
+
+  const customer = document.getElementById("customer").value.trim();
+  const mobile = document.getElementById("mobile").value.trim();
+  const service = document.getElementById("service").value;
+  const eventDate = document.getElementById("eventDate").value;
+  const venue = document.getElementById("venue").value.trim();
+  const details = document.getElementById("details").value.trim();
+
+  if (!/^[0-9]{10}$/.test(mobile)) {
+    alert("Please enter a valid 10-digit Indian mobile number.");
+    return;
+  }
 
   const booking = {
     customer,
@@ -174,7 +205,7 @@ document.getElementById('bookingForm').addEventListener('submit', async function
     eventDate,
     venue,
     details,
-    status: 'Pending'
+    status: "Pending"
   };
 
   const adminMessage = `SS PHOTOGRAPHY - NEW BOOKING
@@ -182,8 +213,8 @@ Customer: ${customer}
 Mobile: ${mobile}
 Service: ${service}
 Event Date: ${eventDate}
-Location: ${venue || 'Not provided'}
-Details: ${details || 'Not provided'}
+Location: ${venue || "Not provided"}
+Details: ${details || "Not provided"}
 Status: Pending`;
 
   const customerMessage = `Hello ${customer},
@@ -192,95 +223,47 @@ Your booking request has been received by SS PHOTOGRAPHY.
 
 Service: ${service}
 Event Date: ${eventDate}
-Location: ${venue || 'Not provided'}
+Location: ${venue || "Not provided"}
 Booking Status: Pending
 
 We will contact you to confirm your booking.
 Thank you!`;
 
-  const result = document.getElementById('bookingResult');
-  const adminLink = document.getElementById('adminWhatsApp');
-  const customerLink = document.getElementById('customerWhatsApp');
-  const submitButton = document.querySelector('#bookingForm button[type="submit"]');
-
-  submitButton.disabled = true;
-  submitButton.textContent = 'Submitting...';
+  button.disabled = true;
+  button.textContent = "Saving Booking...";
+  result.style.display = "none";
 
   try {
-    // Existing Firebase save function — keep it
+    if (typeof window.saveBooking !== "function") {
+      throw new Error("Firebase is not ready. Please refresh and try again.");
+    }
+
     await window.saveBooking(booking);
 
-    adminLink.href =
-      'https://wa.me/918144722094?text=' +
-      encodeURIComponent(adminMessage);
+    document.getElementById("adminWhatsApp").href =
+      "https://wa.me/918144722094?text=" + encodeURIComponent(adminMessage);
 
-    // Indian mobile number: prefix 91 for WhatsApp
-    customerLink.href =
-      'https://wa.me/91' + mobile + '?text=' +
-      encodeURIComponent(customerMessage);
+    document.getElementById("customerWhatsApp").href =
+      "https://wa.me/91" + mobile + "?text=" + encodeURIComponent(customerMessage);
 
-    result.style.display = 'block';
-    result.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    document.getElementById("bookingMessage").textContent =
+      "Thank you, " + customer + ". Your booking is saved successfully.";
 
-    document.getElementById('bookingForm').reset();
+    result.style.display = "block";
+    result.scrollIntoView({ behavior: "smooth", block: "center" });
+    form.reset();
 
   } catch (error) {
-    console.error('Booking save failed:', error);
-    alert('Booking save hela nahi. Internet check kari puni try karantu.');
+    console.error("Booking save failed:", error);
+    alert("Booking save hela nahi. Internet check kari puni try karantu. Error: " + (error.message || "Unknown error"));
   } finally {
-    submitButton.disabled = false;
-    submitButton.textContent = 'Submit Booking';
+    button.disabled = false;
+    button.textContent = "Submit Booking";
   }
 });
 
-  try {
-    await window.saveBooking(booking);
-
-    window.location.href =
-      'https://wa.me/918144722094?text=' +
-      encodeURIComponent(message);
-  } catch (error) {
-    console.error('Booking save failed:', error);
-    alert('Booking save hela nahi. Internet check kari puni try karantu.');
-  }
-});
-  
+console.log("SS PHOTOGRAPHY booking system initialized");
 </script>
-  
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
-  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyAViIeR7357V2aDxNVxx6Y2-LPassccPIc",
-    authDomain: "ss-photography-ab010.firebaseapp.com",
-    projectId: "ss-photography-ab010",
-    storageBucket: "ss-photography-ab010.firebasestorage.app",
-    messagingSenderId: "275799297604",
-    appId: "1:275799297604:web:cbc8521e08594e6b72f611"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-window.saveBooking = async function(booking) {
-  await addDoc(collection(db, "bookings"), booking);
-};
-  console.log("Firebase connected");
-</script>
-  
-<div style="text-align:center; padding:20px;">
-  <a href="admin.html"
-     style="display:inline-block;
-     background:#111;
-     color:#d4af37;
-     padding:12px 24px;
-     border:1px solid #d4af37;
-     border-radius:8px;
-     text-decoration:none;
-     font-weight:bold;">
-    🔐 Admin Login
-  </a>
-</div>
 </body>
 </html>
-        
