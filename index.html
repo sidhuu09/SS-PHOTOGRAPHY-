@@ -1,0 +1,58 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SS PHOTOGRAPHY</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial;background:#101018;color:white}
+header{background:#191925;text-align:center;padding:22px;border-bottom:2px solid #e8bd68}
+h1,.gold{color:#e8bd68}
+nav a{color:white;margin:10px;text-decoration:none}
+.hero{text-align:center;padding:65px 15px;background:linear-gradient(135deg,#39254d,#101018)}
+.hero h2{font-size:34px}
+section{padding:30px 15px;text-align:center}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;max-width:900px;margin:auto}
+.card{background:#222230;border:1px solid #66533b;padding:20px;border-radius:12px}
+form{max-width:450px;margin:auto;text-align:left}
+input,select,textarea{width:100%;padding:12px;margin:8px 0;border-radius:6px}
+button,.btn{background:#e8bd68;color:#111;padding:12px 20px;border:0;border-radius:6px;font-weight:bold}
+footer{text-align:center;padding:20px;background:#191925}
+</style>
+</head>
+<body>
+<header>
+<h1>SS PHOTOGRAPHY</h1>
+<p>Capturing Your Beautiful Moments</p>
+<nav><a href="#packages">Packages</a><a href="#booking">Booking</a></nav>
+</header>
+<div class="hero">
+<h2>Your Story, Our <span class="gold">Camera</span></h2>
+<p>Photography • Videography • Wedding Events</p>
+<a class="btn" href="#booking">Book Now</a>
+</div>
+<section id="packages">
+<h2>Our Packages</h2>
+<div class="cards">
+<div class="card"><h3>Photography</h3><p>Portraits and special moments</p></div>
+<div class="card"><h3>Videography</h3><p>Events and cinematic videos</p></div>
+<div class="card"><h3>Wedding Package</h3><p>Wedding photo and video coverage</p></div>
+</div>
+</section>
+<section id="booking">
+<h2>Book Your Event</h2>
+<form onsubmit="event.preventDefault();alert('Booking form demo only. Online storage is not connected yet.');">
+<label>Customer Name</label><input required placeholder="Your name">
+<label>Mobile Number</label><input required type="tel" placeholder="Your mobile number">
+<label>Service</label>
+<select><option>Photography</option><option>Videography</option><option>Wedding Package</option></select>
+<label>Event Date</label><input required type="date">
+<label>Event Details</label><textarea placeholder="Venue and details"></textarea>
+<button type="submit">Submit Booking</button>
+</form>
+</section>
+<footer>© 2026 SS PHOTOGRAPHY</footer>
+</body>
+</html>
