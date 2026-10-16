@@ -155,11 +155,29 @@ footer strong{color:var(--gold)}
 </footer>
 
 <script>
-document.getElementById('bookingForm').addEventListener('submit',function(e){
+document.getElementById('bookingForm').addEventListener('submit', function(e) {
   e.preventDefault();
-  alert('Thank you! The booking form design is working, but online booking storage is not connected yet.');
+
+  const customer = document.getElementById('customer').value.trim();
+  const mobile = document.getElementById('mobile').value.trim();
+  const service = document.getElementById('service').value;
+  const eventDate = document.getElementById('eventDate').value;
+  const venue = document.getElementById('venue').value.trim();
+  const details = document.getElementById('details').value.trim();
+
+  const message = `SS PHOTOGRAPHY - NEW BOOKING
+Customer: ${customer}
+Mobile: ${mobile}
+Service: ${service}
+Event Date: ${eventDate}
+Location: ${venue || 'Not provided'}
+Details: ${details || 'Not provided'}`;
+
+  window.location.href =
+    'https://wa.me/918144722094?text=' +
+    encodeURIComponent(message);
 });
 </script>
 </body>
-    </html>
-    
+</html>
+        
