@@ -155,7 +155,8 @@ footer strong{color:var(--gold)}
 </footer>
 
 <script>
-document.getElementById('bookingForm').addEventListener('submit', function(e) {
+
+document.getElementById('bookingForm').addEventListener('submit', async function(e) {
   e.preventDefault();
 
   const customer = document.getElementById('customer').value.trim();
@@ -165,6 +166,16 @@ document.getElementById('bookingForm').addEventListener('submit', function(e) {
   const venue = document.getElementById('venue').value.trim();
   const details = document.getElementById('details').value.trim();
 
+  const booking = {
+    customer,
+    mobile,
+    service,
+    eventDate,
+    venue,
+    details,
+    status: 'Pending'
+  };
+
   const message = `SS PHOTOGRAPHY - NEW BOOKING
 Customer: ${customer}
 Mobile: ${mobile}
@@ -173,15 +184,23 @@ Event Date: ${eventDate}
 Location: ${venue || 'Not provided'}
 Details: ${details || 'Not provided'}`;
 
-  window.location.href =
-    'https://wa.me/918144722094?text=' +
-    encodeURIComponent(message);
+  try {
+    await window.saveBooking(booking);
+
+    window.location.href =
+      'https://wa.me/918144722094?text=' +
+      encodeURIComponent(message);
+  } catch (error) {
+    console.error('Booking save failed:', error);
+    alert('Booking save hela nahi. Internet check kari puni try karantu.');
+  }
 });
+  
 </script>
   
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
-  import { getFirestore } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAViIeR7357V2aDxNVxx6Y2-LPassccPIc",
@@ -194,7 +213,9 @@ Details: ${details || 'Not provided'}`;
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
-
+window.saveBooking = async function(booking) {
+  await addDoc(collection(db, "bookings"), booking);
+};
   console.log("Firebase connected");
 </script>
 </body>
