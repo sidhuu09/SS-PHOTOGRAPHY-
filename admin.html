@@ -1,0 +1,202 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SS PHOTOGRAPHY Admin</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 900px;
+      margin: auto;
+    }
+    .panel, .booking {
+      background: white;
+      padding: 18px;
+      margin: 15px 0;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px #0001;
+    }
+    h1 { color: #222; }
+    input, button, select {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px;
+      margin: 7px 0;
+      font-size: 16px;
+    }
+    button {
+      background: #111;
+      color: white;
+      border: 0;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .status { font-weight: bold; }
+    .hidden { display: none; }
+    #message { white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>SS PHOTOGRAPHY</h1>
+  <h2>Admin Dashboard</h2>
+
+  <div class="panel" id="loginPanel">
+    <h3>Admin Login</h3>
+    <form id="loginForm">
+      <input id="email" type="email" placeholder="Admin Email" required>
+      <input id="password" type="password" placeholder="Admin Password" required>
+      <button type="submit">Login</button>
+    </form>
+  </div>
+
+  <div id="dashboard" class="hidden">
+    <div class="panel">
+      <p>Admin Login Successful</p>
+      <button id="refreshBtn">Refresh Bookings</button>
+      <button id="logoutBtn">Logout</button>
+    </div>
+    <div id="bookingsList"></div>
+  </div>
+
+  <p id="message" role="status"></p>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+  import {
+    getFirestore, collection, getDocs, doc, updateDoc
+  } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
+  import {
+    getAuth, signInWithEmailAndPassword,
+    onAuthStateChanged, signOut
+  } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAViIeR7357V2aDxNVxx6Y2-LPassccPIc",
+    authDomain: "ss-photography-ab010.firebaseapp.com",
+    projectId: "ss-photography-ab010",
+    storageBucket: "ss-photography-ab010.firebasestorage.app",
+    messagingSenderId: "275799297604",
+    appId: "1:275799297604:web:cbc8521e08594e6b72f611"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+
+  const loginPanel = document.getElementById("loginPanel");
+  const dashboard = document.getElementById("dashboard");
+  const message = document.getElementById("message");
+  const bookingsList = document.getElementById("bookingsList");
+
+  document.getElementById("loginForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    message.textContent = "Logging in...";
+    try {
+      await signInWithEmailAndPassword(
+        auth,
+        document.getElementById("email").value.trim(),
+        document.getElementById("password").value
+      );
+      message.textContent = "";
+    } catch (error) {
+      message.textContent = "Login failed. Check admin email/password.";
+    }
+  });
+
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      loginPanel.classList.add("hidden");
+      dashboard.classList.remove("hidden");
+      await loadBookings();
+    } else {
+      loginPanel.classList.remove("hidden");
+      dashboard.classList.add("hidden");
+      bookingsList.replaceChildren();
+    }
+  });
+
+  async function loadBookings() {
+    bookingsList.replaceChildren();
+    message.textContent = "Loading bookings...";
+    try {
+      const snapshot = await getDocs(collection(db, "bookings"));
+
+      if (snapshot.empty) {
+        message.textContent = "No bookings found.";
+        return;
+      }
+
+      snapshot.forEach((bookingDoc) => {
+        const b = bookingDoc.data();
+        const card = document.createElement("div");
+        card.className = "booking";
+
+        const title = document.createElement("h3");
+        title.textContent = b.customer || "Customer";
+        card.appendChild(title);
+
+        const info = document.createElement("p");
+        info.textContent =
+          "Mobile: " + (b.mobile || "") +
+          "\nService: " + (b.service || "") +
+          "\nEvent Date: " + (b.eventDate || "") +
+          "\nLocation: " + (b.venue || "") +
+          "\nDetails: " + (b.details || "") +
+          "\nCurrent Status: " + (b.status || "Pending");
+        info.style.whiteSpace = "pre-wrap";
+        card.appendChild(info);
+
+        const select = document.createElement("select");
+        ["Pending", "Confirmed", "Completed", "Cancelled"].forEach((status) => {
+          const option = document.createElement("option");
+          option.value = status;
+          option.textContent = status;
+          if ((b.status || "Pending") === status) option.selected = true;
+          select.appendChild(option);
+        });
+        card.appendChild(select);
+
+        const saveButton = document.createElement("button");
+        saveButton.textContent = "Update Status";
+        saveButton.addEventListener("click", async () => {
+          saveButton.disabled = true;
+          try {
+            await updateDoc(doc(db, "bookings", bookingDoc.id), {
+              status: select.value
+            });
+            message.textContent = "Booking status updated.";
+            await loadBookings();
+          } catch (error) {
+            message.textContent = "Could not update status. Check admin access.";
+            saveButton.disabled = false;
+          }
+        });
+        card.appendChild(saveButton);
+        bookingsList.appendChild(card);
+      });
+
+      message.textContent = "Bookings loaded: " + snapshot.size;
+    } catch (error) {
+      message.textContent = "Could not load bookings. Check admin access and Firestore Rules.";
+    }
+  }
+
+  document.getElementById("refreshBtn").addEventListener("click", loadBookings);
+
+  document.getElementById("logoutBtn").addEventListener("click", async () => {
+    await signOut(auth);
+    message.textContent = "Logged out.";
+  });
+</script>
+</body>
+</html>
+  
