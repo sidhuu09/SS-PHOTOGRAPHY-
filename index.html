@@ -156,6 +156,7 @@ footer strong{color:var(--gold)}
 
 <script>
 
+
 document.getElementById('bookingForm').addEventListener('submit', async function(e) {
   e.preventDefault();
 
@@ -176,13 +177,61 @@ document.getElementById('bookingForm').addEventListener('submit', async function
     status: 'Pending'
   };
 
-  const message = `SS PHOTOGRAPHY - NEW BOOKING
+  const adminMessage = `SS PHOTOGRAPHY - NEW BOOKING
 Customer: ${customer}
 Mobile: ${mobile}
 Service: ${service}
 Event Date: ${eventDate}
 Location: ${venue || 'Not provided'}
-Details: ${details || 'Not provided'}`;
+Details: ${details || 'Not provided'}
+Status: Pending`;
+
+  const customerMessage = `Hello ${customer},
+
+Your booking request has been received by SS PHOTOGRAPHY.
+
+Service: ${service}
+Event Date: ${eventDate}
+Location: ${venue || 'Not provided'}
+Booking Status: Pending
+
+We will contact you to confirm your booking.
+Thank you!`;
+
+  const result = document.getElementById('bookingResult');
+  const adminLink = document.getElementById('adminWhatsApp');
+  const customerLink = document.getElementById('customerWhatsApp');
+  const submitButton = document.querySelector('#bookingForm button[type="submit"]');
+
+  submitButton.disabled = true;
+  submitButton.textContent = 'Submitting...';
+
+  try {
+    // Existing Firebase save function — keep it
+    await window.saveBooking(booking);
+
+    adminLink.href =
+      'https://wa.me/918144722094?text=' +
+      encodeURIComponent(adminMessage);
+
+    // Indian mobile number: prefix 91 for WhatsApp
+    customerLink.href =
+      'https://wa.me/91' + mobile + '?text=' +
+      encodeURIComponent(customerMessage);
+
+    result.style.display = 'block';
+    result.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    document.getElementById('bookingForm').reset();
+
+  } catch (error) {
+    console.error('Booking save failed:', error);
+    alert('Booking save hela nahi. Internet check kari puni try karantu.');
+  } finally {
+    submitButton.disabled = false;
+    submitButton.textContent = 'Submit Booking';
+  }
+});
 
   try {
     await window.saveBooking(booking);
