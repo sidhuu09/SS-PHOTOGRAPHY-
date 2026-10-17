@@ -207,6 +207,7 @@ function renderBookings() {
 
     return `
       <article class="booking">
+        <h3>Booking #${items.indexOf(b) + 1}</h3>
         <h3>${safe(b.customer || "Customer")}</h3>
         <p><b>Booking ID:</b> ${safe(b.id)}</p>
         <p><b>Mobile:</b> ${safe(b.mobile || "—")}</p>
